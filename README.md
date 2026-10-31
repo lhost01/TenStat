@@ -1,4 +1,4 @@
-# TenStat
+#                                                                       TenStat
 
 <p align="center">
   <a href="#"><img alt="Platform" src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white"></a>
