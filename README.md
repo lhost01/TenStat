@@ -15,7 +15,7 @@
   <a href="#"><img alt="Privacy" src="https://img.shields.io/badge/privacy-no%20input%20content-0F7B0F?style=flat-square"></a>
   <a href="#"><img alt="Admin" src="https://img.shields.io/badge/admin-not%20required-informational?style=flat-square"></a>
   <a href="#"><img alt="License" src="https://img.shields.io/badge/license-MIT-3DA639?style=flat-square"></a>
-  <a href="#"><img alt="Version" src="https://img.shields.io/badge/version-v2.1.0-blue?style=flat-square"></a>
+  <a href="#"><img alt="Version" src="https://img.shields.io/badge/version-v1.0-blue?style=flat-square"></a>
 </p>
 
 一个常驻后台的 Windows 桌面小工具：**全局统计鼠标左右键点击、鼠标移动距离、每个按键被按了多少次**，数据全部存在本机 SQLite 里，完全离线。
