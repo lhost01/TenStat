@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenStat", "src\TenStat\TenStat.csproj", "{8E3B1B7A-5C2E-4E4E-9C2B-1A2D3E4F5A61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTool", "tools\DbTool\DbTool.csproj", "{5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8E3B1B7A-5C2E-4E4E-9C2B-1A2D3E4F5A61}.Debug|x64.ActiveCfg = Debug|x64
+		{8E3B1B7A-5C2E-4E4E-9C2B-1A2D3E4F5A61}.Debug|x64.Build.0 = Debug|x64
+		{8E3B1B7A-5C2E-4E4E-9C2B-1A2D3E4F5A61}.Release|x64.ActiveCfg = Release|x64
+		{8E3B1B7A-5C2E-4E4E-9C2B-1A2D3E4F5A61}.Release|x64.Build.0 = Release|x64
+		{5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D}.Debug|x64.Build.0 = Debug|Any CPU
+		{5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D}.Release|x64.ActiveCfg = Release|Any CPU
+		{5A1B2C3D-4E5F-4A6B-8C7D-9E0F1A2B3C4D}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

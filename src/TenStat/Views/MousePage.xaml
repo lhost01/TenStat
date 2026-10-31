@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="TenStat.Views.MousePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:TenStat.Controls"
+    mc:Ignorable="d">
+
+    <Grid Padding="24,16,24,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- 页头区 -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock Text="鼠标统计" Style="{StaticResource PageTitleTextStyle}" />
+                <RadioButtons SelectedIndex="{x:Bind ViewModel.ScopeIndex, Mode=TwoWay}" MaxColumns="3">
+                    <x:String>今日</x:String>
+                    <x:String>本次会话</x:String>
+                    <x:String>总计</x:String>
+                </RadioButtons>
+            </StackPanel>
+
+            <Button Grid.Column="1"
+                    x:Name="ResetMouseButton"
+                    Content="重置今日鼠标统计"
+                    Style="{StaticResource DangerButtonStyle}"
+                    VerticalAlignment="Top"
+                    Click="OnResetMouseClick" />
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Padding="0,0,4,24">
+            <StackPanel Spacing="16">
+
+                <InfoBar IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
+                         Severity="Error"
+                         Title="出错了"
+                         Message="{x:Bind ViewModel.ErrorText, Mode=OneWay}"
+                         IsClosable="True" />
+
+                <!-- 左右键 -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="6">
+                            <Grid>
+                                <TextBlock Text="{x:Bind ViewModel.LeftSubtitle, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                                <FontIcon Glyph="&#xE962;" FontSize="14" HorizontalAlignment="Right" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                            </Grid>
+                            <TextBlock Text="{x:Bind ViewModel.LeftClicksText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="6">
+                            <Grid>
+                                <TextBlock Text="{x:Bind ViewModel.RightSubtitle, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                                <FontIcon Glyph="&#xE8A7;" FontSize="14" HorizontalAlignment="Right" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                            </Grid>
+                            <TextBlock Text="{x:Bind ViewModel.RightClicksText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 比例 + 距离 -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource SectionCardStyle}">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="左 / 右键比例" Style="{StaticResource SectionTitleTextStyle}" />
+                            <Grid Height="150">
+                                <controls:DonutRing Value="{x:Bind ViewModel.LeftRatio, Mode=OneWay}" RingThickness="18" />
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="2">
+                                    <TextBlock Text="{x:Bind ViewModel.LeftClicksText, Mode=OneWay}" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                                    <TextBlock Text="左键" Style="{StaticResource CaptionSecondaryTextStyle}" HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="{x:Bind ViewModel.RatioText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource SectionCardStyle}">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="移动距离" Style="{StaticResource SectionTitleTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.MoveMetersText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.MovePixelsText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.SpeedText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.DroppedJumpsText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="移动距离按相邻坐标欧氏距离累加，单次位移 ≥ 2000 像素视为异常跳变并丢弃；米数需在设置里做 DPI 校准。"
+                                       Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 点击速率趋势 -->
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Grid>
+                            <TextBlock Text="最近 1 小时点击速率" Style="{StaticResource SectionTitleTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.ScopeCaption, Mode=OneWay}" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </Grid>
+                        <controls:MiniLineChart Height="160" Values="{x:Bind ViewModel.ClickTrend, Mode=OneWay}" />
+                        <TextBlock Text="移动距离按相邻坐标欧氏距离累加，单次位移 ≥ 2000 像素视为异常跳变并丢弃；米数需在设置里做 DPI 校准。"
+                                   Style="{StaticResource CaptionSecondaryTextStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 空状态 -->
+                <Border Style="{StaticResource StatCardStyle}"
+                        Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE962;" FontSize="28" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                        <TextBlock Text="还没有鼠标记录" HorizontalAlignment="Center" />
+                        <TextBlock Text="点几下鼠标左键或移动一下，这里就有数字了" Style="{StaticResource CaptionSecondaryTextStyle}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

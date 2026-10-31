@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Live2D Pet</title>
+    <link rel="stylesheet" href="pet.css" />
+</head>
+<body>
+    <!-- 渲染舞台（pixi canvas 会插进来） -->
+    <div id="stage"></div>
+
+    <!-- 说话气泡：宿主发 {cmd:'say', text} 时显示 -->
+    <div id="bubble"></div>
+
+    <!-- 错误提示层：加载失败/超时时显示红字，绝不静默白屏 -->
+    <div id="hint"></div>
+
+    <!-- 全部走 app.local 虚拟主机映射，离线可用；不要用 type="module" -->
+    <script src="vendor/pixi.min.js"></script>
+    <script src="vendor/live2dcubismcore.min.js"></script>
+    <script src="vendor/cubism4.min.js"></script>
+    <script src="pet.js"></script>
+</body>
+</html>

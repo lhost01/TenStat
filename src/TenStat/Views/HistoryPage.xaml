@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="TenStat.Views.HistoryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:TenStat.Controls"
+    xmlns:vm="using:TenStat.ViewModels"
+    mc:Ignorable="d">
+
+    <Grid Padding="24,16,24,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- 页头区 -->
+        <Grid Grid.Row="0" Margin="0,0,0,16" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock Text="历史记录" Style="{StaticResource PageTitleTextStyle}" />
+                <TextBlock Text="只读视图：历史页不会修改任何原始统计" Style="{StaticResource CaptionSecondaryTextStyle}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Top">
+                <CalendarDatePicker x:Name="DatePicker"
+                                    PlaceholderText="选择日期"
+                                    Date="{x:Bind ViewModel.SelectedDate, Mode=TwoWay}" />
+                <Button Content="今天" Command="{x:Bind ViewModel.JumpToTodayCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+                <Button Content="近 7 天" Command="{x:Bind ViewModel.UseLast7DaysCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+                <Button Content="近 30 天" Command="{x:Bind ViewModel.UseLast30DaysCommand}" Style="{StaticResource ToolbarButtonStyle}" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Padding="0,0,4,24">
+            <StackPanel Spacing="16">
+
+                <InfoBar IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
+                         Severity="Error"
+                         Title="出错了"
+                         Message="{x:Bind ViewModel.ErrorText, Mode=OneWay}"
+                         IsClosable="True" />
+
+                <TextBlock Text="{x:Bind ViewModel.SelectedDateText, Mode=OneWay}" Style="{StaticResource SectionTitleTextStyle}" />
+
+                <!-- 当天摘要 -->
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="左键" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.LeftText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="右键" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.RightText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="移动距离" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.PixelsText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.MetersText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="3" Style="{StaticResource StatCardStyle}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="键盘总次数" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.KeysText, Mode=OneWay}" Style="{StaticResource CardNumberTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.ActiveText, Mode=OneWay}" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 高频按键 Top 5 -->
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="高频按键 Top 5" Style="{StaticResource SectionTitleTextStyle}" />
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.TopKeys}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:KeyRowItem">
+                                    <Border CornerRadius="12" Padding="12,6" Background="{ThemeResource CardSoftBackgroundBrush}"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{x:Bind KeyName}" Style="{StaticResource KeyBadgeTextStyle}" VerticalAlignment="Center" />
+                                            <TextBlock Text="{x:Bind CountText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="该日期没有按键记录"
+                                   Style="{StaticResource CaptionSecondaryTextStyle}"
+                                   Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 趋势 -->
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <StackPanel Spacing="12">
+                        <Grid>
+                            <TextBlock Text="日趋势（点击总数）" Style="{StaticResource SectionTitleTextStyle}" />
+                            <TextBlock Text="{x:Bind ViewModel.RangeText, Mode=OneWay}" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </Grid>
+                        <controls:MiniLineChart Height="150" Values="{x:Bind ViewModel.TrendValues, Mode=OneWay}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- 每日明细 -->
+                <Border Style="{StaticResource SectionCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="每日明细" Style="{StaticResource SectionTitleTextStyle}" />
+
+                        <Grid Padding="4,0" ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="日期" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Grid.Column="1" Text="左键" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Grid.Column="2" Text="右键" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Grid.Column="3" Text="移动距离" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Grid.Column="4" Text="键盘" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                            <TextBlock Grid.Column="5" Text="最高频按键" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{x:Bind ViewModel.DailyRows}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:HistoryRowItem">
+                                    <Grid Padding="4,8" ColumnSpacing="8" BorderThickness="0,0,0,1"
+                                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{x:Bind DateText}" />
+                                            <TextBlock Text="{x:Bind WeekdayText}" Style="{StaticResource CaptionSecondaryTextStyle}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind LeftText}" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="2" Text="{x:Bind RightText}" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="3" Text="{x:Bind PixelsText}" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="4" Text="{x:Bind KeysText}" HorizontalAlignment="Right" />
+                                        <TextBlock Grid.Column="5" Text="{x:Bind TopKeyText}" HorizontalAlignment="Right" Style="{StaticResource CaptionSecondaryTextStyle}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock Text="该日期没有记录"
+                                   Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"
+                                   Style="{StaticResource CaptionSecondaryTextStyle}" />
+                    </StackPanel>
+                </Border>
+
+                <Button Content="导出该日期数据（CSV）"
+                        x:Name="ExportButton"
+                        Click="OnExportSelectedDate"
+                        Style="{StaticResource ToolbarButtonStyle}" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
